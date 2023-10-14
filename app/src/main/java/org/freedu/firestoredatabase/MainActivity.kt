@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import org.freedu.firestoredatabase.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), DataAdapter.ItemClickListener {
@@ -37,7 +40,9 @@ class MainActivity : AppCompatActivity(), DataAdapter.ItemClickListener {
     }
 
     private fun fetchData() {
-        dataCollection.get()
+        dataCollection
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .get()
             .addOnSuccessListener {
                 data.clear()
                 for(document in it){
@@ -53,7 +58,7 @@ class MainActivity : AppCompatActivity(), DataAdapter.ItemClickListener {
     }
 
     private fun addData(title: String, description: String) {
-        val newData = Data(title = title, description = description)
+        val newData = Data(title = title, description = description, timestamp = Timestamp.now())
         dataCollection.add(newData)
             .addOnSuccessListener {
                 newData.id = it.id
@@ -61,6 +66,7 @@ class MainActivity : AppCompatActivity(), DataAdapter.ItemClickListener {
                 adapter.notifyDataSetChanged()
                 binding.titleEtxt.text?.clear()
                 binding.descEtxt.text?.clear()
+                fetchData()
                 Toast.makeText(this, "Data added successfully", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
@@ -78,16 +84,16 @@ class MainActivity : AppCompatActivity(), DataAdapter.ItemClickListener {
             val updateDescription = binding.descEtxt.text.toString()
 
             if(updateTitle.isNotEmpty() && updateDescription.isNotEmpty()){
-                val updateData = Data(data.id, updateTitle, updateDescription)
+                val updateData = Data(data.id, updateTitle, updateDescription,Timestamp.now())
 
                 dataCollection.document(data.id!!)
                     .set(updateData)
                     .addOnSuccessListener {
                         binding.titleEtxt.text?.clear()
                         binding.descEtxt.text?.clear()
-                        binding.addBtn.text = "ADD"
                         Toast.makeText(this, "Data Updated", Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this, MainActivity::class.java))
+                        finish()
                     }
                     .addOnFailureListener {
                         Toast.makeText(this, "Data updated failed", Toast.LENGTH_SHORT).show()
