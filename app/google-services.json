@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "507808593034",
+    "project_id": "firestoredatabase-1656f",
+    "storage_bucket": "firestoredatabase-1656f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507808593034:android:ab38bdcd4b2f275246e973",
+        "android_client_info": {
+          "package_name": "org.freedu.firestoredatabase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfrogm0_TR0I9Ou1I7WgWsEuyUM5f7jeA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
